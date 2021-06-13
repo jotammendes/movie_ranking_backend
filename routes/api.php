@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -15,10 +16,11 @@ use App\Http\Controllers\UserController;
 |
 */
 
-Route::post('auth', [UserController::class, 'auth']);
+Route::get('login', [AuthController::class, 'unauthenticatedUser'])->name('api.login');
+Route::post('auth', [AuthController::class, 'authenticateUser']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('user', [UserController::class, 'index']);
-    Route::post('user/store', [Controller::class, 'store']);
-    Route::post('user/update', [UserController::class, 'update']);
+    Route::get('user', [UserController::class, 'getAllUsers']);
+    Route::post('user/store', [UserController::class, 'storeNewUser']);
+    Route::post('user/update', [UserController::class, 'updateAuthenticatedUser']);
 });
