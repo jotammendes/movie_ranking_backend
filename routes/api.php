@@ -4,7 +4,10 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\GenreController;
+
 use App\Http\Controllers\TMDBController;
+use App\Http\Controllers\OMDBController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,9 +24,15 @@ Route::get('login', [AuthController::class, 'unauthenticatedUser'])->name('api.l
 Route::post('auth', [AuthController::class, 'authenticateUser']);
 
 Route::middleware('auth:sanctum')->group(function () {
-    Route::get('user', [UserController::class, 'getAllUsers']);
+    // Rotas para Usuário (User)
+    Route::get('user/all', [UserController::class, 'getAllUsers']);
     Route::post('user/store', [UserController::class, 'storeNewUser']);
     Route::post('user/update', [UserController::class, 'updateAuthenticatedUser']);
 
+    // Rotas para Gêneros (Genre)
+    Route::get('genre/all', [TMDBController::class, 'getAllGenres']);
+    Route::post('genre/verify', [GenreController::class, 'verifyAllGenres']);
+
+    // Rotas para Filmes (Movie)
     Route::get('movie/top_rated', [TMDBController::class, 'getTopRatedMovies']);
 });
