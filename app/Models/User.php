@@ -23,7 +23,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Lista de atributos que devem estar escondidos.
+     * Lista de atributos escondidos.
      *
      * @var array
      */

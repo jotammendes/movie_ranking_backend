@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class GenreMovie extends Model
 {
     use HasFactory;
+
+    /**
+     * Lista de atributos.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'genre_id',
+        'movie_id',
+    ];
 }

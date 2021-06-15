@@ -2,9 +2,11 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\GenreController;
+use App\Http\Controllers\MovieController;
 
 use App\Http\Controllers\TMDBController;
 use App\Http\Controllers\OMDBController;
@@ -31,8 +33,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rotas para Gêneros (Genre)
     Route::get('genre/all', [TMDBController::class, 'getAllGenres']);
-    Route::post('genre/verify', [GenreController::class, 'verifyAllGenres']);
+    Route::post('genre/verify', [GenreController::class, 'verifyGenresFromTMDB']);
 
     // Rotas para Filmes (Movie)
     Route::get('movie/top_rated', [TMDBController::class, 'getTopRatedMovies']);
+    Route::post('movie/verify', [MovieController::class, 'verifyMoviesFromTMDB']);
 });

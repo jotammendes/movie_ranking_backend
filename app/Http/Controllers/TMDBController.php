@@ -10,7 +10,7 @@ class TMDBController extends Controller
      * Função responsável por consumir a The Movie DB API, requisitando
      * os gêneros de filmes existentes.
      *
-     * @return json(array, code) | array
+     * @return mix null or array
      */
     public function getAllGenres(){
         try {
@@ -20,6 +20,7 @@ class TMDBController extends Controller
             $language = '&language=pt-BR';
             $filter = $search_type . $language;
             $url = 'https://api.themoviedb.org/3/genre/movie/' . $filter . $api_key;
+            
             // Inicialização de requisição
             $curl = curl_init();
 
@@ -33,7 +34,7 @@ class TMDBController extends Controller
             // Execução de requisição
             $genres = curl_exec($curl);
             if(!$genres){
-                return response()->json(['error' => 'Erro ao gerar lista de gêneros.'], 404);
+                return null;
             }
 
             // Término da requisição
@@ -45,7 +46,7 @@ class TMDBController extends Controller
             // Retorna a resposta da requisição
             return $genres->genres;
         } catch(\Exception $e) {
-            return response()->json(['error' => "Erro ao gerar lista de gêneros."], 404);
+            return null;
         }
      }
 
@@ -53,7 +54,7 @@ class TMDBController extends Controller
      * Função responsável por consumir a The Movie DB API, requisitando
      * os filmes de acordo com a opção enviada e os retornando.
      *
-     * @return json(array, code)
+     * @return mix null or array
      */
     public function getTopRatedMovies(){
         try {
@@ -78,7 +79,7 @@ class TMDBController extends Controller
             // Execução de requisição
             $movies = curl_exec($curl);
             if(!$movies){
-                return response()->json(['error' => 'Erro ao gerar lista de filmes.'], 404);
+                return null;
             }
 
             // Término da requisição
@@ -88,9 +89,9 @@ class TMDBController extends Controller
             $movies = json_decode($movies);
 
             // Retorna a resposta da requisição
-            return response()->json($movies, 200);
+            return $movies->results;
         } catch(\Exception $e) {
-            return response()->json(['error' => "Erro ao gerar lista de filmes."], 404);
+            return null;
         }
      }
 

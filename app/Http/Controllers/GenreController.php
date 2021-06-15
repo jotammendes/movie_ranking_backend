@@ -12,9 +12,10 @@ class GenreController extends Controller
     /**
      * Função Construtora.
      */
-    public function __construct(TMDBController $tmdb)
+    public function __construct(TMDBController $tmdb, Genre $genres)
     {
         $this->tmdb = $tmdb;
+        $this->genres = $genres;
     }
 
     /**
@@ -23,27 +24,30 @@ class GenreController extends Controller
      *
      * @return json(array, code)
      */
-    public function verifyAllGenres() {
+    public function verifyGenresFromTMDB() {
         try {
+            // recupera lista de gêneros vindos da requisição
             $genres_api = $this->tmdb->getAllGenres();
 
             foreach($genres_api as $genre_api) {
-                $genre = Genre::where('title', $genre_api->name)->where('id_tmdb', $genre_api->id)->first();
+                // procura no banco pelo gênero vindo da requisição
+                $genre = $this->genres->where('title', $genre_api->name)->first();
 
+                
+                if(!$genre) { // caso não encontre, será cadastrado novo gênero
+                    $genre = $this->storeNewGenre($genre_api);
+                }
+                else { // caso encontre, o gênero será atualizado
+                    $genre = $this->updateGenre($genre, $genre_api);
+                }
+
+                // caso uma das ações de cadastrar/atualizar tenha dado algum erro, será retornado uma mensagem
                 if(!$genre) {
-                    $resp = $this->storeNewGenre($genre_api);
-                }
-                elseif($genre->id_imdb != $genre_api->id) {
-                    $resp = $this->updateGenre($genre, $genre_api);
-                }
-
-                if(!$resp) {
                     return response()->json(["message" => "Um erro ocorreu ao cadastrar/atualizar um gênero."], 404);
                 }
             }
-            $genres = Genre::all();
-            dd($genres);
 
+            // retorno com mensagem de êxito
             return response()->json(["message" => "Gêneros de Filmes verificados com sucesso."], 200);
         } catch(\Exception $e) {
             return response()->json(["message" => "Erro ao verificar gêneros de filmes."], 404);
@@ -53,25 +57,27 @@ class GenreController extends Controller
     /**
      * Função responsável por cadastrar um novo gênero.
      *
-     * @return boolean
+     * @param $genre_api
+     * @return mix null || Movie $movie
      */
     public function storeNewGenre($genre_api) {
         try {
-            Genre::create([
+            $genre = $this->genres->create([
                 'id_tmdb' => $genre_api->id,
                 'title' => $genre_api->name,
             ]);
 
-            return true;
+            return $genre;
         } catch(\Exception $e) {
-            return false;
+            return null;
         }
     }
 
     /**
      * Função responsável por atualizar um gênero existente.
      *
-     * @return boolean
+     * @param Genre $genre $genre_api
+     * @return mix null || Movie $movie
      */
     public function updateGenre(Genre $genre, $genre_api) {
         try {
@@ -80,9 +86,9 @@ class GenreController extends Controller
                 'title' => $genre_api->name,
             ]);
 
-            return true;
+            return $genre;
         } catch(\Exception $e) {
-            return false;
+            return null;
         }
     }
 }
