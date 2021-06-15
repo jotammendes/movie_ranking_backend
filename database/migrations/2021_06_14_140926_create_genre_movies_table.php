@@ -17,7 +17,6 @@ class CreateGenreMoviesTable extends Migration
             $table->id();
             $table->foreignId('genre_id')->constrained('genres')->onDelete('cascade');
             $table->foreignId('movie_id')->constrained('movies')->onDelete('cascade');
-            $table->timestamps();
         });
     }
 

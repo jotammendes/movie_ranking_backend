@@ -19,16 +19,7 @@ class Genre extends Model
         'title',
     ];
 
-    /**
-     * Lista de atributos vindos de relacionamentos.
-     *
-     * @var array
-     */
-    protected $with = [
-        'movies',
-    ];
-
     public function movies() {
-        return $this->belongsToMany(Movie::class);
+        return $this->belongsToMany(Movie::class, 'genre_movies');
     }
 }

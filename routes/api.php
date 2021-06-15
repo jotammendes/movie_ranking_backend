@@ -33,9 +33,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Rotas para Gêneros (Genre)
     Route::get('genre/all', [TMDBController::class, 'getAllGenres']);
-    Route::post('genre/verify', [GenreController::class, 'verifyGenresFromTMDB']);
+    Route::get('genre/verify', [GenreController::class, 'verifyGenresFromTMDB']);
 
     // Rotas para Filmes (Movie)
     Route::get('movie/top_rated', [TMDBController::class, 'getTopRatedMovies']);
-    Route::post('movie/verify', [MovieController::class, 'verifyMoviesFromTMDB']);
+    Route::get('movie/verify', [MovieController::class, 'verifyMoviesFromTMDB']);
 });

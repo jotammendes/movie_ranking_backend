@@ -33,20 +33,15 @@ class Movie extends Model
         'release_date_formatted',
     ];
 
-    /**
-     * Lista de atributos vindos de relacionamentos.
-     *
-     * @var array
-     */
-    protected $with = [
-        'genres',
-    ];
-
     public function getReleaseDateFormattedAttribute() {
         return date('d/m/Y', strtotime($this->release_date));
     }
 
     public function genres() {
-        return $this->belongsToMany(Genre::class);
+        return $this->belongsToMany(Genre::class, 'genre_movies');
+    }
+
+    public function votes() {
+        return $this->hasMany(Vote::class);
     }
 }

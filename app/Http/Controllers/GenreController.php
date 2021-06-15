@@ -6,16 +6,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use App\Models\Genre;
+use App\Http\Controllers\TMDBController;
 
 class GenreController extends Controller
 {
     /**
      * Função Construtora.
      */
-    public function __construct(TMDBController $tmdb, Genre $genres)
+    public function __construct(Genre $genres, TMDBController $tmdb)
     {
-        $this->tmdb = $tmdb;
         $this->genres = $genres;
+        $this->tmdb = $tmdb;
     }
 
     /**
@@ -28,12 +29,10 @@ class GenreController extends Controller
         try {
             // recupera lista de gêneros vindos da requisição
             $genres_api = $this->tmdb->getAllGenres();
-
             foreach($genres_api as $genre_api) {
                 // procura no banco pelo gênero vindo da requisição
                 $genre = $this->genres->where('title', $genre_api->name)->first();
 
-                
                 if(!$genre) { // caso não encontre, será cadastrado novo gênero
                     $genre = $this->storeNewGenre($genre_api);
                 }
@@ -50,7 +49,7 @@ class GenreController extends Controller
             // retorno com mensagem de êxito
             return response()->json(["message" => "Gêneros de Filmes verificados com sucesso."], 200);
         } catch(\Exception $e) {
-            return response()->json(["message" => "Erro ao verificar gêneros de filmes."], 404);
+            return response()->json(["message" => $e->getMessage()], 404);
         }
     }
 

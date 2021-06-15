@@ -12,18 +12,16 @@ class GenreMovieController extends Controller
     /**
      * Função Construtora.
      */
-    public function __construct(Genre $genres, Movie $movies, GenreMovie $genre_movies)
+    public function __construct(Genre $genres)
     {
         $this->genres = $genres;
-        $this->movies = $movies;
-        $this->genre_movies = $genre_movies;
     }
 
     /**
      * Função responsável relacionar filmes e gêneros.
      *
      * @param $movie_api $movie_id
-     * @return mix null \\ Movie $movie
+     * @return mix null or Movie $movie
      */
     public function storeNewGenreMovie($movie_api, Movie $movie) {
         try {

@@ -21,7 +21,7 @@ class CreateMoviesTable extends Migration
             $table->text('overview', 21844);
             $table->date('release_date', 255);
             $table->float('popularity', 8, 2);
-            $table->float('vote_average', 1, 1)->default(0.0);
+            $table->float('vote_average', 8, 1)->default(0.0);
             $table->timestamps();
         });
     }

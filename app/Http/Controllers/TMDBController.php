@@ -20,7 +20,7 @@ class TMDBController extends Controller
             $language = '&language=pt-BR';
             $filter = $search_type . $language;
             $url = 'https://api.themoviedb.org/3/genre/movie/' . $filter . $api_key;
-            
+
             // Inicialização de requisição
             $curl = curl_init();
 
@@ -48,7 +48,7 @@ class TMDBController extends Controller
         } catch(\Exception $e) {
             return null;
         }
-     }
+    }
 
     /**
      * Função responsável por consumir a The Movie DB API, requisitando
@@ -93,27 +93,5 @@ class TMDBController extends Controller
         } catch(\Exception $e) {
             return null;
         }
-     }
-
-     /**
-     * Função responsável por contruir uma lista com os nomes dos filmes.
-     *
-     * @param response()->json() $movies
-     * @return json(array, code)
-     */
-    public function getTheTitleMovies($movies){
-        try {
-            $titles = [ "titles" => [] ];
-
-            foreach($movies->results as $movie) {
-                $title = $movie->original_title;
-                $titles['titles'] = array_merge($titles['titles'], array($title));
-            }
-    
-            // Retorna a lista de títulos
-            return response()->json($titles, 200);
-        } catch(\Exception $e) {
-            return response()->json(['error' => "Ocorreu um erro ao gerar lista de títulos de filmes."], 404);
-        }
-     }
+    }
 }

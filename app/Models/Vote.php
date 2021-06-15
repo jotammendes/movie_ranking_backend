@@ -8,4 +8,14 @@ use Illuminate\Database\Eloquent\Model;
 class Vote extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'name_api',
+        'vote_average',
+        'movie_id',
+    ];
+
+    public function movie() {
+        return $this->belongsTo(Movie::class);
+    }
 }
