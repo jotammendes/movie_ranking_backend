@@ -4,15 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Movie;
+use App\Models\Genre;
 
 class MovieController extends Controller
 {
     /**
      * Função Construtora.
      */
-    public function __construct(Movie $movies, GenreMovieController $genre_movie, VoteController $votes, tMDBController $tmdb, OMDBController $omdb)
+    public function __construct(Movie $movies, GenreController $genres, GenreMovieController $genre_movie, VoteController $votes, tMDBController $tmdb, OMDBController $omdb)
     {
         $this->movies = $movies;
+        $this->genres = $genres;
         $this->genre_movie = $genre_movie;
         $this->votes = $votes;
         $this->tmdb = $tmdb;
@@ -27,6 +29,9 @@ class MovieController extends Controller
      */
     public function verifyMoviesFromTMDB() {
         try {
+            // atualiza gêneros de filmes
+            $this->genres->verifyGenresFromTMDB();
+
             // recupera lista de filmes vindos da requisição da primeira API
             $movies_api = $this->tmdb->getTopRatedMovies();
 
@@ -64,8 +69,11 @@ class MovieController extends Controller
                     }
                 }
             }
-            // retorno com mensagem de êxito
-            return response()->json(["message" => "Filmes verificados com sucesso."], 200);
+
+            $movies = $this->movies->all();
+
+            // retorno da função
+            return response()->json($movies, 200);
         } catch(\Exception $e) {
             return response()->json(["message" => $e->getMessage()], 404);
         }
@@ -140,6 +148,28 @@ class MovieController extends Controller
             return $movie;
         } catch(\Exception $e) {
             return null;
+        }
+    }
+
+    public function getAllMovies() {
+        try {
+            $movies = $this->movies->orderBy('vote_average', 'desc')->get();
+
+            return response()->json($movies, 200);
+        } catch(\Exception $e) {
+            return response()->json(['error' => 'Não foi possível pegar a lista de filmes'], 404);
+        }
+    }
+
+    public function getMovie($id) {
+        try {
+            $movie = $this->movies->find($id);
+            $movie->genres;
+            $movie->votes;
+
+            return response()->json($movie, 200);
+        } catch(\Exception $e) {
+            return response()->json(['error' => 'Não foi possível pegar a lista de filmes'], 404);
         }
     }
 }

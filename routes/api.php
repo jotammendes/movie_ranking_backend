@@ -25,7 +25,7 @@ use App\Http\Controllers\OMDBController;
 Route::get('login', [AuthController::class, 'unauthenticatedUser'])->name('api.login');
 Route::post('auth', [AuthController::class, 'authenticateUser']);
 
-Route::middleware('auth:sanctum')->group(function () {
+// Route::middleware('auth:sanctum')->group(function () {
     // Rotas para Usuário (User)
     Route::get('user/all', [UserController::class, 'getAllUsers']);
     Route::post('user/store', [UserController::class, 'storeNewUser']);
@@ -38,4 +38,6 @@ Route::middleware('auth:sanctum')->group(function () {
     // Rotas para Filmes (Movie)
     Route::get('movie/top_rated', [TMDBController::class, 'getTopRatedMovies']);
     Route::get('movie/verify', [MovieController::class, 'verifyMoviesFromTMDB']);
-});
+    Route::get('movie/all', [MovieController::class, 'getAllMovies']);
+    Route::get('movie/{id}', [MovieController::class, 'getMovie']);
+// });

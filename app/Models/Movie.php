@@ -44,4 +44,8 @@ class Movie extends Model
     public function votes() {
         return $this->hasMany(Vote::class);
     }
+
+    public function users() {
+        return $this->belongsToMany(User::class, 'favorites');
+    }
 }
