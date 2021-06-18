@@ -70,7 +70,7 @@ class MovieController extends Controller
                 }
             }
 
-            $movies = $this->movies->all();
+            $movies = $this->movies->orderBy('vote_average', 'desc')->get();
 
             // retorno da função
             return response()->json($movies, 200);
